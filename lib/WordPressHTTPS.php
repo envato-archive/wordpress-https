@@ -204,7 +204,7 @@ class WordPressHTTPS extends Mvied_Plugin {
 
 				$string = $url->toString();
 			} else {
-				if ( $url->getScheme() == 'http' && @in_array($url, $this->getSetting('secure_external_urls')) == false && @in_array($url, $this->getSetting('unsecure_external_urls')) == false ) {
+				/*if ( $url->getScheme() == 'http' && @in_array($url, $this->getSetting('secure_external_urls')) == false && @in_array($url, $this->getSetting('unsecure_external_urls')) == false ) {
 					$test_url = clone $url;
 					$test_url->setScheme('https');
 					if ( $test_url->isValid() ) {
@@ -216,9 +216,9 @@ class WordPressHTTPS extends Mvied_Plugin {
 					}
 				}
 
-				if ( in_array($url->toString(), $this->getSetting('secure_external_urls')) ) {
+				if ( in_array($url->toString(), $this->getSetting('secure_external_urls')) ) {*/
 					$string = str_replace($url, str_replace('http://', 'https://', $url), $string);
-				}
+				//}
 			}
 			unset($url);
 		}
@@ -339,6 +339,10 @@ class WordPressHTTPS extends Mvied_Plugin {
 
 		if ( $url ) {
 			$path = ( isset($_SERVER['REDIRECT_URL']) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'] );
+			if ( strpos($_SERVER['REQUEST_URI'], '?') !== false && isset($_SERVER['REDIRECT_URL']) && strpos($_SERVER['REDIRECT_URL'], '?') === false ) {
+				$path .= substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?'));
+			}
+
 			if ( $this->getHttpsUrl()->getPath() != '/' ) {
 				$path = str_replace($this->getHttpsUrl()->getPath(), '', $path);
 			}
